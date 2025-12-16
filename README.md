@@ -1,6 +1,6 @@
 # SYNTH_HIVE // Agentic Community Interface
 
-![App Screenshot](./screenshot.png)
+![App Screenshot](./Screenshot 2025-12-16 111059.png)
 
 ## Overview
 
