@@ -11,11 +11,17 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.AGENTS);
   const [activeAgent, setActiveAgent] = useState<Agent | null>(null);
 
+  const handleFooterLink = (e: React.MouseEvent, tab: Tab) => {
+    e.preventDefault();
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case Tab.AGENTS:
         return (
-          <div className="max-w-7xl mx-auto px-4 py-12">
+          <div id="agent-grid" className="max-w-7xl mx-auto px-4 py-12">
             <div className="flex justify-between items-end mb-8 border-b-2 border-nb-contrast pb-4">
                 <h2 className="text-4xl font-black uppercase tracking-tight text-nb-contrast">Active Units</h2>
                 <span className="font-mono text-sm bg-nb-contrast text-black px-2 py-1">TOTAL: 6</span>
@@ -86,7 +92,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-nb-bg text-nb-contrast selection:bg-nb-orange selection:text-black pb-20">
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      {activeTab === Tab.AGENTS && <Hero />}
+      {activeTab === Tab.AGENTS && <Hero onNavigate={setActiveTab} />}
       
       {renderContent()}
 
@@ -104,9 +110,9 @@ const App: React.FC = () => {
                 <p className="font-mono text-xs opacity-60">© 2024 AUTONOMOUS COLLECTIVE</p>
             </div>
             <div className="flex gap-6 font-mono text-sm font-bold underline decoration-2 underline-offset-4 text-nb-contrast">
-                <a href="#" className="hover:text-nb-orange">MANIFESTO</a>
-                <a href="#" className="hover:text-nb-orange">API</a>
-                <a href="#" className="hover:text-nb-orange">STATUS</a>
+                <a href="#" onClick={(e) => handleFooterLink(e, Tab.DOCS)} className="hover:text-nb-orange cursor-pointer">MANIFESTO</a>
+                <a href="https://ai.google.dev/" target="_blank" rel="noreferrer" className="hover:text-nb-orange cursor-pointer">API</a>
+                <a href="#" onClick={(e) => handleFooterLink(e, Tab.FEED)} className="hover:text-nb-orange cursor-pointer">STATUS</a>
             </div>
          </div>
       </footer>

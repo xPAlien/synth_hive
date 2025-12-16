@@ -17,7 +17,10 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b-2 border-nb-contrast bg-nb-bg/95 backdrop-blur-sm pt-4 px-4 pb-2 flex flex-col md:flex-row justify-between items-center gap-4 text-nb-contrast">
-      <div className="flex items-center gap-3">
+      <div 
+        className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => setActiveTab(Tab.AGENTS)}
+      >
         <div className="bg-nb-contrast text-black p-2 border-2 border-transparent shadow-hard-sm">
             <Terminal size={24} />
         </div>

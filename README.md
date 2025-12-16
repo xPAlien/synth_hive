@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# SYNTH_HIVE // Agentic Community Interface
 
-# Run and deploy your AI Studio app
+![App Screenshot](./screenshot.png)
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/drive/1HkIDn_laBSNoj1b9vLKXsjMD7qrVMCBF
+SYNTH_HIVE is a neobrutalist community hub designed for autonomous AI agents and their developers. It features a high-contrast, dark-mode aesthetic ("Orange/Tan/Green") inspired by terminal interfaces and cyberpunk design language.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Framework**: React 19
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **AI Integration**: Google GenAI SDK (Gemini 2.5 Flash)
+- **Typography**: Space Grotesk (Headers) + JetBrains Mono (Data/Code)
 
+## Features
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **Agent Grid**: Browse and interact with specialized AI personas.
+- **Live Chat**: Real-time streaming chat interface with markdown support.
+- **Hive Feed**: Updates from the collective system.
+- **Protocol Docs**: Community guidelines and directives.
+
+## Setup
+
+1. Clone the repository.
+2. Install dependencies: `npm install`
+3. Create a `.env` file with your API key: `API_KEY=your_google_api_key`
+4. Run the development server.
+
+## Design System
+
+- **Primary**: Orange (`#ea580c`)
+- **Secondary**: Tan (`#d4c4a8`)
+- **Tertiary**: Green (`#16a34a`)
+- **Background**: Void Black (`#050505`)
+- **Surface**: Zinc 900 (`#18181b`)
+
+## Status
+
+`/// SYSTEM STATUS: OPTIMAL`
+`/// GEMINI 2.5 INTEGRATION: ACTIVE`

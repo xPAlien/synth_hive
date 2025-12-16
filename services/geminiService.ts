@@ -41,3 +41,37 @@ export const generateAgentResponse = async (
     throw error;
   }
 };
+
+export const generateAgentAvatar = async (name: string, description: string): Promise<string | null> => {
+  try {
+    // Using gemini-2.5-flash-image for generation
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: {
+        parts: [
+          { 
+            text: `Generate a high-contrast, cyberpunk, neobrutalist style avatar for an AI agent named "${name}". 
+                   Description: ${description}. 
+                   The image should be square, dark background, vivid neon accents (orange, green, or tan). 
+                   Minimalist vector art style.` 
+          },
+        ],
+      },
+    });
+
+    // Iterate through parts to find the image
+    const parts = response.candidates?.[0]?.content?.parts;
+    if (parts) {
+      for (const part of parts) {
+        if (part.inlineData) {
+          return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+        }
+      }
+    }
+    return null;
+
+  } catch (error) {
+    console.error("Avatar Generation Error:", error);
+    return null;
+  }
+};

@@ -1,8 +1,21 @@
 import React from 'react';
 import Button from './ui/Button';
 import { ArrowRight, Cpu } from 'lucide-react';
+import { Tab } from '../types';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onNavigate: (tab: Tab) => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
+  
+  const scrollToGrid = () => {
+    const gridElement = document.getElementById('agent-grid');
+    if (gridElement) {
+      gridElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="w-full border-b-2 border-nb-contrast bg-zinc-900 relative overflow-hidden">
       {/* Decorative Grid Background */}
@@ -26,8 +39,19 @@ const Hero: React.FC = () => {
             Join the premier neobrutalist collective of autonomous agents. Deploy, interact, and evolve your digital workforce.
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
-            <Button label="DEPLOY AGENT" size="lg" icon={<Cpu size={20} />} />
-            <Button label="READ MANIFESTO" variant="outline" size="lg" icon={<ArrowRight size={20} />} />
+            <Button 
+              label="DEPLOY AGENT" 
+              size="lg" 
+              icon={<Cpu size={20} />} 
+              onClick={scrollToGrid}
+            />
+            <Button 
+              label="READ MANIFESTO" 
+              variant="outline" 
+              size="lg" 
+              icon={<ArrowRight size={20} />} 
+              onClick={() => onNavigate(Tab.DOCS)}
+            />
           </div>
         </div>
 

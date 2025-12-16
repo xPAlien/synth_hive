@@ -10,17 +10,43 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ agent, onClose }) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'init',
-      role: 'model',
-      content: `**SYSTEM MSG:** Connection established with **${agent.name}**. \n\n${agent.description} How can I assist?`,
-      timestamp: new Date()
+  const storageKey = `synth_hive_chat_${agent.id}`;
+
+  // Initialize state from localStorage if available
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Revive date strings back to Date objects
+        return parsed.map((m: any) => ({
+          ...m,
+          timestamp: new Date(m.timestamp)
+        }));
+      }
+    } catch (error) {
+      console.warn("Failed to load chat history:", error);
     }
-  ]);
+    
+    // Default initial state if no history found
+    return [
+      {
+        id: 'init',
+        role: 'model',
+        content: `**SYSTEM MSG:** Connection established with **${agent.name}**. \n\n${agent.description} How can I assist?`,
+        timestamp: new Date()
+      }
+    ];
+  });
+
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Persist messages to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  }, [messages, storageKey]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,6 +55,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ agent, onClose }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleClear = () => {
+    const newHistory: Message[] = [
+        {
+          id: Date.now().toString(),
+          role: 'model',
+          content: `**SYSTEM MSG:** Context cleared. Memory reset for **${agent.name}**. Ready for new input.`,
+          timestamp: new Date()
+        }
+    ];
+    setMessages(newHistory);
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isTyping) return;
@@ -112,7 +150,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ agent, onClose }) => {
                 </div>
             </div>
             <div className="flex gap-2">
-                <button className="p-2 border-2 border-black hover:bg-black hover:text-white transition-colors" title="Clear Context">
+                <button 
+                    onClick={handleClear}
+                    className="p-2 border-2 border-black hover:bg-black hover:text-white transition-colors" 
+                    title="Clear Context"
+                >
                     <RefreshCw size={20} />
                 </button>
                 <button onClick={onClose} className="p-2 bg-black border-2 border-black text-white hover:bg-red-600 transition-colors">
@@ -160,17 +202,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ agent, onClose }) => {
 
         {/* Input Area */}
         <div className="p-4 border-t-4 border-nb-contrast bg-zinc-900 flex gap-4">
-            <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="TRANSMIT MESSAGE..."
-                className="flex-1 border-2 border-nb-contrast p-4 font-mono text-sm focus:outline-none focus:shadow-hard-sm transition-all resize-none h-16 bg-black text-white placeholder-zinc-500"
-            />
+            <div className="flex-1 flex flex-col gap-2">
+                <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="TRANSMIT MESSAGE..."
+                    className="w-full flex-1 border-2 border-nb-contrast p-4 font-mono text-sm focus:outline-none focus:shadow-hard-sm transition-all resize-none h-16 bg-black text-white placeholder-zinc-500"
+                />
+                <div className="flex justify-end">
+                    <span className="text-[10px] font-mono font-bold text-zinc-500 tracking-wider">
+                        CHARS: {input.length}
+                    </span>
+                </div>
+            </div>
             <button 
                 onClick={handleSend}
                 disabled={isTyping || !input.trim()}
-                className="bg-nb-contrast text-black px-8 font-bold border-2 border-transparent hover:bg-nb-orange hover:border-nb-contrast hover:shadow-hard disabled:opacity-50 disabled:cursor-not-allowed transition-all active:translate-y-1"
+                className="bg-nb-contrast text-black px-8 font-bold border-2 border-transparent hover:bg-nb-orange hover:border-nb-contrast hover:shadow-hard disabled:opacity-50 disabled:cursor-not-allowed transition-all active:translate-y-1 h-full"
             >
                 <Send size={24} />
             </button>
